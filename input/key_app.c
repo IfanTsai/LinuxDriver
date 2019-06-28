@@ -8,10 +8,11 @@
 
 #define KEYBOARD_PATH "/dev/input/event5"
 #define MOUSE_PATH "/dev/input/event7"
+#define X210_KEY_PATH "/dev/input/event2"
 
 int main(void)
 {
-    int fd = open(MOUSE_PATH, O_RDONLY);
+    int fd = open(X210_KEY_PATH, O_RDONLY);
     if (fd < 0) {
         perror("open");
         exit(1);
