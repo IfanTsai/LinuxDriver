@@ -17,17 +17,6 @@ struct e2prom_device {
 
 struct e2prom_device *e2prom_dev;
 
-struct i2c_device_id e2prom_table[] = {
-    [0] = {
-        .name         = "24c02",
-        .driver_data  = 0,
-    },
-    [1] = {
-        .name         = "24c08",
-        .driver_data  = 0,
-    },
-};
-
 static int i2c_read_byte(char *buf, int count)
 {
     int ret = 0;
@@ -200,7 +189,26 @@ static int e2prom_remove(struct i2c_client *client)
     return 0;
 }
 
-调用
+struct i2c_device_id e2prom_table[] = {
+    [0] = {
+        .name         = "24c02",
+        .driver_data  = 0,
+    },
+    [1] = {
+        .name         = "24c08",
+        .driver_data  = 0,
+    },
+};
+
+/* I2C设备驱动 */
+struct i2c_driver e2prom_driver = {
+    .probe     =  e2prom_probe,
+    .remove    =  e2prom_remove,
+    .id_table  =  e2prom_table,
+    .driver    = {
+        .name = "e2prom",
+    },
+};
 
 static int __init e2prom_init(void)
 {
