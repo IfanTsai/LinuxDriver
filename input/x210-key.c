@@ -23,7 +23,7 @@ static struct input_dev *key_dev;
 #ifdef USE_TASKLET
 void func(unsigned long arg)
 #else
-void func(struct work_struct work)
+void func(struct work_struct *work)
 #endif
 {
     int val;
@@ -88,7 +88,7 @@ static int __init button_init(void)
     if (!key_dev) {
         printk(KERN_ERR "\nbutton.c: Not enough memory\n");
         error = -ENOMEM;
-        goto err_free_irq;
+        goto err_input_allocate_device;
     }
 
     key_dev->name = "x210-key";
@@ -99,13 +99,13 @@ static int __init button_init(void)
     error = input_register_device(key_dev);
     if (error) {
         printk(KERN_ERR "\nbutton.c: Failed to register device\n");
-        goto err_free_dev;
+        goto err_register_device;
     }
     return 0;
 
-err_free_dev:
+err_register_device:
     input_free_device(key_dev);
-err_free_irq:
+err_input_allocate_device:
     free_irq(LEFT_IRQ, NULL);
     gpio_free(LEFT_GPIO);
     return error;
